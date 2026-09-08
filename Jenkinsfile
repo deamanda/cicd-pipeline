@@ -14,7 +14,7 @@ pipeline {
                 sh 'npm test'
             }
         }
-        stage('Build') {
+        stage('Docker build') {
             steps {
                 sh 'docker build -t node${env.BRANCH_NAME}:v1.0. .'
             }
