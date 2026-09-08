@@ -16,7 +16,7 @@ pipeline {
         }
         stage('Docker build') {
             steps {
-                sh 'docker build -t node${env.BRANCH_NAME}:v1.0. .'
+                sh "docker build -t node${env.BRANCH_NAME}:v1.0 ."
             }
         }
     }
