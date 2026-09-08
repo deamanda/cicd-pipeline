@@ -16,8 +16,7 @@ pipeline {
         }
         stage('Docker build') {
             steps {
-                sh 'git config --global --add safe.directory "$WORKSPACE"'
-                sh "docker build -t node${env.BRANCH_NAME}:v1.0 ."
+                dockerImage = docker.build("node${env.BRANCH_NAME}:v1.0")
             }
         }
     }
