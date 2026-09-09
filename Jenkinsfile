@@ -48,17 +48,16 @@ pipeline {
     //         }
     //     }        
     // }
-    stage('Test Docker Hub credentials') {
-    steps {
-        script {
-            docker.withRegistry(
-                'https://index.docker.io/v1/',
-                'dockerhub-credentials'
-            ) {
-                sh 'docker pull yukalinina/ikalinina_application:latest'
+        stage('Test Docker Hub credentials') {
+        steps {
+            script {
+                docker.withRegistry(
+                    'https://index.docker.io/v1/',
+                    'dockerhub-credentials'
+                ) {
+                    sh 'docker pull yukalinina/ikalinina_application:latest'
+                }
             }
         }
     }
-}
-
 }
