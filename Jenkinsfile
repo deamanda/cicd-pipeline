@@ -19,7 +19,7 @@ pipeline {
                 script {
                     dockerImage = docker.build("node${env.BRANCH_NAME}:v1.0")
                     docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials') {
-                    dockerImage.push()
+                    dockerImage.push()}
                 }
             }
         }
@@ -48,5 +48,4 @@ pipeline {
             }
         }        
     }
-}
 }
