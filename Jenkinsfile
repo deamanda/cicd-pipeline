@@ -17,7 +17,7 @@ pipeline {
         stage('Docker build') {
             steps {
                 script {
-                    dockerImage = docker.build("node${env.BRANCH_NAME}:v1.0")
+                    dockerImage = docker.build("${DOCKER_USERNAME}/node${env.BRANCH_NAME}:v1.0")
                     docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials') {
                     dockerImage.push()}
                 }
@@ -28,7 +28,7 @@ pipeline {
             steps {
                 script {
                     def name = "app_${env.BRANCH_NAME}".toLowerCase()
-                    def image = "node${env.BRANCH_NAME}:v1.0"
+                    def image = "${DOCKER_USERNAME}/node${env.BRANCH_NAME}:v1.0"
                     sh "docker pull ${image}"
                     sh "docker rm -f ${name} || true"
                     sh "docker run -d --name ${name} --expose 3000 -p 3000:3000 ${image}"
@@ -40,7 +40,7 @@ pipeline {
             steps {
                 script {
                     def name = "app_${env.BRANCH_NAME}".toLowerCase()
-                    def image = "node${env.BRANCH_NAME}:v1.0"
+                    def image = "${DOCKER_USERNAME}/node${env.BRANCH_NAME}:v1.0"
                     sh "docker pull ${image}"
                     sh "docker rm -f ${name} || true"
                     sh "docker run -d --name ${name} --expose 3001 -p 3001:3000 ${image}"
