@@ -30,9 +30,8 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    def name = "app_${env.BRANCH_NAME}".toLowerCase()
                     def port = 3000
-                    if (${env.BRANCH_NAME}=='dev') {
+                    if (env.BRANCH_NAME=='dev') {
                         port=3001
                     }
                     sh "docker rm -f app || true"
