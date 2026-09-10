@@ -18,43 +18,21 @@ pipeline {
             steps {
                 script {
                     dockerImage = docker.build("${DOCKER_USERNAME}/node${env.BRANCH_NAME}:v1.0")
-                    docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials') {
-                    dockerImage.push()}
                 }
             }
         }
-        stage('Scan Docker image for vulnerabilities') {
-            steps {
-                script {
-                    def vulnerabilities=sh (script: "trivy image --exit-code 0 --severity HIGH,MEDIUM,LOW --no-progress ${registry}:${env.BUILD_ID}", 
-                    returnStdout: true).trim()
-                    echo "Vulnerabilitity Report: \n${vulnerabilities}"
-                }
-            }
-        }
-        stage('Deploy_to_main') {
-            when {branch 'main'}
+        stage('Deploy') {
             steps {
                 script {
                     def name = "app_${env.BRANCH_NAME}".toLowerCase()
-                    def image = "${DOCKER_USERNAME}/node${env.BRANCH_NAME}:v1.0"
-                    sh "docker pull ${image}"
-                    sh "docker rm -f ${name} || true"
-                    sh "docker run -d --name ${name} --expose 3000 -p 3000:3000 ${image}"
+                    def port = 3000
+                    if (${env.BRANCH_NAME}=='dev') {
+                        port=3001
+                    }
+                    sh "docker rm -f app || true"
+                    sh "docker run -d --name app --expose ${port} -p ${port}:3000 ${image}"
                 }
             }
-        }
-        stage('Deploy_to_dev') {
-            when {branch 'dev'}
-            steps {
-                script {
-                    def name = "app_${env.BRANCH_NAME}".toLowerCase()
-                    def image = "${DOCKER_USERNAME}/node${env.BRANCH_NAME}:v1.0"
-                    sh "docker pull ${image}"
-                    sh "docker rm -f ${name} || true"
-                    sh "docker run -d --name ${name} --expose 3001 -p 3001:3000 ${image}"
-                }
-            }
-        }        
+        }       
     }
 }
