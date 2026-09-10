@@ -17,13 +17,13 @@ pipeline {
         stage('Docker build') {
             steps {
                 script {
-                    if (${env.BRANCH_NAME}=='dev') {
+                    if (env.BRANCH_NAME=='dev') {
                         sh 'cp /var/jenkins_home/logos/dev.svg /src/logo.svg'
                     }
                     else {
                         sh 'cp /var/jenkins_home/logos/main.svg /src/logo.svg'
                     }
-                    dockerImage = docker.build("${DOCKER_USERNAME}/node${env.BRANCH_NAME}:v1.0")
+                    dockerImage = docker.build("node${env.BRANCH_NAME}:v1.0")
                 }
             }
         }
@@ -36,7 +36,7 @@ pipeline {
                         port=3001
                     }
                     sh "docker rm -f app || true"
-                    sh "docker run -d --name app --expose ${port} -p ${port}:3000 ${dockerImage}"
+                    sh "docker run -d --name app --expose ${port} -p ${port}:3000 node${env.BRANCH_NAME}:v1.0"
                 }
             }
         }       
