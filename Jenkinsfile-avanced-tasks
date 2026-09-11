@@ -1,17 +1,33 @@
 pipeline {
-    agent any
-    tools {
-        nodejs 'node'
-    }
     stages {
+        agent {
+            docker {
+                    image 'node:7.8.0'
+                }
+            }
         stage('Build') { 
             steps {
                 sh 'npm install' 
             }
         }
         stage('Test') {
+            agent {
+                docker {
+                    image 'node:7.8.0'
+                }
+            }
             steps {
                 sh 'npm test'
+            }
+        }
+        agent any
+        stage('Docker linter') {
+            steps {
+                script {
+                    def vulnerabilities=sh (script: "hadolint Dockerfile --no-fail", 
+                    returnStdout: true).trim()
+                    echo "Vulnerabilitity Report: \n${vulnerabilities}"
+                }
             }
         }
         stage('Docker build') {
@@ -19,15 +35,6 @@ pipeline {
                 script {
                     dockerImage = docker.build("${DOCKER_USERNAME}/node${env.BRANCH_NAME}:v1.0")
 
-                }
-            }
-        }
-        stage('Docker linter') {
-            steps {
-                script {
-                    def vulnerabilities=sh (script: "hadolint Dockerfile --no-fail", 
-                    returnStdout: true).trim()
-                    echo "Vulnerabilitity Report: \n${vulnerabilities}"
                 }
             }
         }
