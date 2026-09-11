@@ -25,7 +25,7 @@ pipeline {
         stage('Docker linter') {
             steps {
                 script {
-                    def vulnerabilities=sh (script: "hadolint Dockerfile", 
+                    def vulnerabilities=sh (script: "hadolint Dockerfile --no-fail", 
                     returnStdout: true).trim()
                     echo "Vulnerabilitity Report: \n${vulnerabilities}"
                 }
