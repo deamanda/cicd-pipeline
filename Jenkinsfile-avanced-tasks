@@ -1,4 +1,5 @@
 pipeline {
+    agent any
     stages {
         stage('Build') { 
             agent {
@@ -20,7 +21,6 @@ pipeline {
                 sh 'npm test'
             }
         }
-        agent any
         stage('Docker linter') {
             steps {
                 script {
