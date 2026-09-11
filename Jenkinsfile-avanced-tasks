@@ -22,11 +22,13 @@ pipeline {
             }
         }
         stage('Docker linter') {
+            agent {
+                docker {
+                    image 'hadolint/hadolint:latest'
+                }
+            }
             steps {
-                script {
-                    def vulnerabilities=sh (script: "hadolint Dockerfile --no-fail", 
-                    returnStdout: true).trim()
-                    echo "Vulnerabilitity Report: \n${vulnerabilities}"
+                sh 'hadolint Dockerfile --no-fail'
                 }
             }
         }
