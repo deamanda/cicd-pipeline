@@ -1,3 +1,4 @@
+@Library('JenkinsTesLib') _
 pipeline {
     agent any
     stages {
@@ -59,11 +60,7 @@ pipeline {
             when {branch 'main'}
             steps {
                 script {
-                    def name = "app_${env.BRANCH_NAME}"
-                    def image = "${DOCKER_USERNAME}/node${env.BRANCH_NAME}:v1.0"
-                    sh "docker pull ${image}"
-                    sh "docker rm -f ${name} || true"
-                    sh "docker run -d --name ${name} --expose 3000 -p 3000:3000 ${image}"
+                    deploy_to_branch('app_${env.BRANCH_NAME}', '${DOCKER_USERNAME}/node${env.BRANCH_NAME}:v1.0',3000)
                 }
             }
         }
@@ -71,11 +68,7 @@ pipeline {
             when {branch 'dev'}
             steps {
                 script {
-                    def name = "app_${env.BRANCH_NAME}"
-                    def image = "${DOCKER_USERNAME}/node${env.BRANCH_NAME}:v1.0"
-                    sh "docker pull ${image}"
-                    sh "docker rm -f ${name} || true"
-                    sh "docker run -d --name ${name} --expose 3001 -p 3001:3000 ${image}"
+                    deploy_to_branch('app_${env.BRANCH_NAME}', '${DOCKER_USERNAME}/node${env.BRANCH_NAME}:v1.0', 3001)
                 }
             }
         }        
