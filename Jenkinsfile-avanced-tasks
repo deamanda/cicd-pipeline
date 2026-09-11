@@ -22,19 +22,19 @@ pipeline {
                 }
             }
         }
-        stage('Scan Docker image for vulnerabilities') {
+        stage('Docker linter') {
             steps {
                 script {
-                    def vulnerabilities=sh (script: "trivy image --exit-code 0 --severity HIGH,MEDIUM,LOW --no-progress node${env.BRANCH_NAME}:v1.0", 
+                    def vulnerabilities=sh (script: "hadolint Dockerfile", 
                     returnStdout: true).trim()
                     echo "Vulnerabilitity Report: \n${vulnerabilities}"
                 }
             }
         }
-        stage('Docker linter') {
+        stage('Scan Docker image for vulnerabilities') {
             steps {
                 script {
-                    def vulnerabilities=sh (script: "hadolint node${env.BRANCH_NAME}:v1.0", 
+                    def vulnerabilities=sh (script: "trivy image --exit-code 0 --severity HIGH,MEDIUM,LOW --no-progress node${env.BRANCH_NAME}:v1.0", 
                     returnStdout: true).trim()
                     echo "Vulnerabilitity Report: \n${vulnerabilities}"
                 }
