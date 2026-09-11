@@ -29,7 +29,6 @@ pipeline {
             }
             steps {
                 sh 'hadolint Dockerfile --no-fail'
-                }
             }
         }
         stage('Docker build') {
