@@ -17,13 +17,7 @@ pipeline {
         stage('Docker build') {
             steps {
                 script {
-                    if (env.BRANCH_NAME=='dev') {
-                        sh 'cp /var/jenkins_home/logos/dev.svg src/logo.svg'
-                    }
-                    else {
-                        sh 'cp /var/jenkins_home/logos/main.svg src/logo.svg'
-                    }
-                    dockerImage = docker.build("node${env.BRANCH_NAME}:v1.0")
+                    sh "docker build -t node${env.BRANCH_NAME}:v1.0 ."
                 }
             }
         }
